@@ -1,0 +1,269 @@
+{
+	"info": {
+		"_postman_id": "56264120-97a6-4871-95cc-418c4c1ab1e6",
+		"name": "GitHub",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19621336"
+	},
+	"item": [
+		{
+			"name": "Get All Github Repos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array of objects with 'id' property\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('array').that.is.not.empty;\r",
+							"    pm.response.json().forEach(function(repo) {\r",
+							"        pm.expect(repo).to.be.an('object').that.has.property('id');\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/users/{{USERNAME}}/repos",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"users",
+						"{{USERNAME}}",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = pm.response.json();\r",
+							"\r",
+							"// Test the response body structure and values\r",
+							"pm.test(\"Response body structure is valid\", function () {\r",
+							"    pm.expect(responseJSON).has.property('id');\r",
+							"    pm.expect(responseJSON).has.property('name');\r",
+							"    pm.expect(responseJSON).has.property('full_name');\r",
+							"    pm.expect(responseJSON).has.property('private');\r",
+							"    pm.expect(responseJSON).has.property('owner');\r",
+							"    pm.expect(responseJSON).has.property('html_url');\r",
+							"    pm.expect(responseJSON).has.property('description');\r",
+							"    pm.expect(responseJSON).has.property('fork');\r",
+							"    pm.expect(responseJSON).has.property('forks_count');\r",
+							"    pm.expect(responseJSON).has.property('open_issues_count');\r",
+							"    pm.expect(responseJSON).has.property('permissions');\r",
+							"});\r",
+							"\r",
+							"// Additional tests for specific properties can be added here\r",
+							"pm.test(\"Owner object structure is valid\", function () {\r",
+							"    pm.expect(responseJSON.owner).has.property('login');\r",
+							"    pm.expect(responseJSON.owner).has.property('id');\r",
+							"    pm.expect(responseJSON.owner).has.property('avatar_url');\r",
+							"    pm.expect(responseJSON.owner).has.property('html_url');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Permissions object structure is valid\", function () {\r",
+							"    pm.expect(responseJSON.permissions).has.property('admin');\r",
+							"    pm.expect(responseJSON.permissions).has.property('maintain');\r",
+							"    pm.expect(responseJSON.permissions).has.property('push');\r",
+							"    pm.expect(responseJSON.permissions).has.property('triage');\r",
+							"    pm.expect(responseJSON.permissions).has.property('pull');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"{{REPO_NAME}}\",\r\n    \"description\":\"This is a test repo created using POSTMAN\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/user/repos",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Repo Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ensure that 'permissions' object has the required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.permissions).to.be.an('object');\r",
+							"    pm.expect(responseData.permissions).to.have.property('admin');\r",
+							"    pm.expect(responseData.permissions).to.have.property('maintain');\r",
+							"    pm.expect(responseData.permissions).to.have.property('push');\r",
+							"    pm.expect(responseData.permissions).to.have.property('triage');\r",
+							"    pm.expect(responseData.permissions).to.have.property('pull');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify that security_and_analysis object contains expected fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.security_and_analysis).to.be.an('object');\r",
+							"    pm.expect(responseData.security_and_analysis.secret_scanning).to.exist;\r",
+							"    pm.expect(responseData.security_and_analysis.secret_scanning_push_protection).to.exist;\r",
+							"    pm.expect(responseData.security_and_analysis.dependabot_security_updates).to.exist;\r",
+							"    pm.expect(responseData.security_and_analysis.secret_scanning_validity_checks).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"{{NEW_REPO_NAME}}\",\r\n    \"description\":\"Repo name update by postman\",\r\n    \"homepage\":\"https://github.com\",\r\n    \"private\":true,\r\n    \"has_issues\":true,\r\n    \"has_projects\":true,\r\n    \"has_wiki\":true\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/repos/{{USERNAME}}/Hello-World",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"repos",
+						"{{USERNAME}}",
+						"Hello-World"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a repo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Repo Deleted\"] = responseCode.code == 204\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/repos/{{USERNAME}}/{{NEW_REPO_NAME}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"repos",
+						"{{USERNAME}}",
+						"{{NEW_REPO_NAME}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "ghp_bZhxBAMZWVFShrlghCwpaBbn9LW8YD3Seq",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "https://api.github.com",
+			"type": "string"
+		},
+		{
+			"key": "USERNAME",
+			"value": "santos-k",
+			"type": "string"
+		},
+		{
+			"key": "REPO_NAME",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "NEW_REPO_NAME",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

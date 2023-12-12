@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "db907310-58ae-4c89-82ad-48dd797f9fdf",
+		"name": "Authorizations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19621336"
+	},
+	"item": [
+		{
+			"name": "Basic Auth",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "postman",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://postman-echo.com/basic-auth",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"basic-auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "API Key Auth",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "53a3c81a3874abedbb4604f6663cbb19",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "appid",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "query",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openweathermap.org/data/2.5/weather?q=Gaya",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Gaya"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bearer Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test to check the response status code\r",
+							"pm.test(\"Response status code is 201\", function () {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"// Test to check the structure of the response body\r",
+							"var responseJSON = pm.response.json();\r",
+							"pm.test(\"Response body structure is valid\", function () {\r",
+							"    pm.expect(responseJSON).to.be.an('object').and.to.have.property('id');\r",
+							"    pm.expect(responseJSON).to.have.property('name');\r",
+							"    pm.expect(responseJSON).to.have.property('private');\r",
+							"    pm.expect(responseJSON).to.have.property('owner');\r",
+							"    pm.expect(responseJSON).to.have.property('html_url');\r",
+							"    pm.expect(responseJSON).to.have.property('fork');\r",
+							"    pm.expect(responseJSON).to.have.property('forks_count');\r",
+							"    pm.expect(responseJSON).to.have.property('permissions');\r",
+							"});\r",
+							"\r",
+							"// Test to check the owner object structure\r",
+							"pm.test(\"Owner object structure is valid\", function () {\r",
+							"    pm.expect(responseJSON.owner).to.be.an('object').and.to.have.property('login');\r",
+							"    pm.expect(responseJSON.owner).to.have.property('id');\r",
+							"    pm.expect(responseJSON.owner).to.have.property('avatar_url');\r",
+							"    pm.expect(responseJSON.owner).to.have.property('html_url');\r",
+							"    pm.expect(responseJSON.owner).to.have.property('type');\r",
+							"});\r",
+							"\r",
+							"// Test to check the permissions object structure\r",
+							"pm.test(\"Permissions object structure is valid\", function () {\r",
+							"    pm.expect(responseJSON.permissions).to.be.an('object').and.to.have.property('admin');\r",
+							"    pm.expect(responseJSON.permissions).to.have.property('maintain');\r",
+							"    pm.expect(responseJSON.permissions).to.have.property('push');\r",
+							"    pm.expect(responseJSON.permissions).to.have.property('triage');\r",
+							"    pm.expect(responseJSON.permissions).to.have.property('pull');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "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",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Hello-World\" ,\r\n    \"description\": \"This repo created by Postman using API\" ,\r\n    \"homepage\" :\"https://github.com\" ,\r\n    \"private\": false,\r\n    \"has_issues\" :true ,\r\n    \"has_projects \" :true,\r\n    \"has_wiki\" :true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.github.com/user/repos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				},
+				"description": "Creating Github Repo using this API. To perform this API request Bearer auth required by github. This bearer auth will also works same as OAuth2.0"
+			},
+			"response": []
+		},
+		{
+			"name": "OAuth2.0 ",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Hello-World2\" ,\r\n    \"description\": \"This repo is created by Postman API\" ,\r\n    \"homepage\" :\"https://github.com\" ,\r\n    \"private\": false,\r\n    \"has_issues\" :true ,\r\n    \"has_projects \" :true,\r\n    \"has_wiki\" :true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.github.com/user/repos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,79 @@
+{
+	"info": {
+		"_postman_id": "6388a8a8-2e0c-4984-97aa-10b635dd227d",
+		"name": "Data Driven Testing API",
+		"description": "**Test Case**\n\n<img src=\"https://content.pstmn.io/767bcf51-31cc-4303-b04a-bf3778d9be06/aW1hZ2UucG5n\" alt=\"\" height=\"782\" width=\"1710\">",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19621336"
+	},
+	"item": [
+		{
+			"name": "Create a new user record in db",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Name, salary, and age are not empty strings\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.data.name).to.not.be.empty;\r",
+							"    pm.expect(responseData.data.salary).to.not.be.empty;\r",
+							"    pm.expect(responseData.data.age).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Id is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.data.id).to.be.a('number').and.to.be.at.least(0);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response message should be Successfully, Record Added \", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.message).to.equal(\"Successfully! Record has been added.\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"{{name}}\",\r\n    \"salary\":\"{{salary}}\",\r\n    \"age\":\"{{age}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dummy.restapiexample.com/api/v1/create",
+					"protocol": "https",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

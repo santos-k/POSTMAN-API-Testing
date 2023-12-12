@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "1b6dc51c-f652-4681-9e2f-e101c499c9f8",
+		"name": "RestAPI Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19621336"
+	},
+	"item": [
+		{
+			"name": "Get All Employees Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Data array is present and contains at least one element\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.be.an('array').and.to.have.lengthOf.at.least(1, \"Data array should contain at least one element\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Each 'id' in 'data' array is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.be.an('array');\r",
+							"    \r",
+							"    responseData.data.forEach(function(employee) {\r",
+							"        pm.expect(employee.id).to.be.a('number').and.to.satisfy((val) => val >= 0, \"ID must be a non-negative integer\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Each employee_name in data array is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.be.an('array');\r",
+							"    \r",
+							"    responseData.data.forEach(function(employee) {\r",
+							"        pm.expect(employee.employee_name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Employee name should not be empty\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Each employee's salary is a non-negative number\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.be.an('array');\r",
+							"\r",
+							"    responseData.data.forEach(function(employee) {\r",
+							"        pm.expect(employee.employee_salary).to.be.a('number');\r",
+							"        pm.expect(employee.employee_salary).to.be.at.least(0);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dummy.restapiexample.com/api/v1/employees",
+					"protocol": "https",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a single employee data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Data object should exist and be an object\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.exist.and.to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Employee name is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data.employee_name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Employee name should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Employee salary is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.data.employee_salary).to.be.a('number');\r",
+							"    pm.expect(responseData.data.employee_salary).to.be.at.least(0);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Profile image is a valid URL\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.data).to.be.an('object');\r",
+							"    pm.expect(responseData.data.profile_image).to.be.a('string').and.to.match(/^http(s)?:\\/\\/.+/);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"New employee data should exist in the response\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    const newEmployee = {\r",
+							"        id: 1, \r",
+							"        employee_name: \"Tiger Nixon\", \r",
+							"        employee_salary: 320800, \r",
+							"        employee_age: 61, \r",
+							"        profile_image: \"\"};\r",
+							"\r",
+							"    pm.expect(responseData.data).to.deep.include(newEmployee);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dummy.restapiexample.com/api/v1/employee/1",
+					"protocol": "https",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employee",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new record in database",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var responseJSON = pm.response.json();\r",
+							"\r",
+							"// Test to match every record in the response\r",
+							"pm.test(\"Response has correct status\", function () {\r",
+							"    pm.expect(responseJSON.status).to.equal(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has correct data\", function () {\r",
+							"    pm.expect(responseJSON.data.name).to.equal(\"Santosh1\");\r",
+							"    pm.expect(responseJSON.data.salary).to.equal(\"54321\");\r",
+							"    pm.expect(responseJSON.data.age).to.equal(\"23\");\r",
+							"    // pm.expect(responseJSON.data.id).to.equal(1835);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has correct message\", function () {\r",
+							"    pm.expect(responseJSON.message).to.equal(\"Successfully! Record has been added.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Santosh1\",\r\n    \"salary\":\"54321\",\r\n    \"age\":\"23\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dummy.restapiexample.com/api/v1/create",
+					"protocol": "https",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update an employee record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test to verify the response body structure and values\r",
+							"pm.test(\"Response body structure and values are valid\", function () {\r",
+							"    var responseJSON = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJSON).to.eql({\r",
+							"        status: \"success\",\r",
+							"        data: {\r",
+							"            name: \"test\",\r",
+							"            salary: \"123\",\r",
+							"            age: \"23\"\r",
+							"        },\r",
+							"        message: \"Successfully! Record has been updated.\"\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Santosh\",\r\n    \"salary\":\"12345\",\r\n    \"age\":\"23\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dummy.restapiexample.com/api/v1/update/20",
+					"protocol": "https",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"update",
+						"20"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an employee record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has required fields - status, data, and message\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData).to.have.property('status');\r",
+							"    pm.expect(responseData).to.have.property('data');\r",
+							"    pm.expect(responseData).to.have.property('message');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status field is a valid string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.status).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Data field should be empty\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.data).to.be.empty;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://dummy.restapiexample.com/public/api/v1/delete/20",
+					"protocol": "https",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"public",
+						"api",
+						"v1",
+						"delete",
+						"20"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
